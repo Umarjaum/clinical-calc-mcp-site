@@ -2,7 +2,7 @@
 
 The public project website for [clinical-calc-mcp](https://github.com/Umarjaum/clinical-calc-mcp): an open-source local MCP server for deterministic clinical calculations and unit conversions.
 
-**Visit the site:** [clinical-calc-mcp.pages.dev](https://clinical-calc-mcp.pages.dev/) · **Everyone is welcome to contribute** from [across the web](https://github.com/Umarjaum/clinical-calc-mcp-site/blob/main/CONTRIBUTING.md).
+**Planned site address:** `https://clinical-calc-mcp.pages.dev/` (deployment is pending Cloudflare's GitHub integration repair). **Everyone is welcome to contribute** from [across the web](https://github.com/Umarjaum/clinical-calc-mcp-site/blob/main/CONTRIBUTING.md).
 
 ## Develop locally
 
@@ -22,7 +22,7 @@ The Vite output for Cloudflare Pages is `dist/public`. The site uses no backend,
 
 ## Deployment
 
-Cloudflare Pages project slug: `clinical-calc-mcp` (default public URL: `https://clinical-calc-mcp.pages.dev`). Production branch: `main`. Build command: `pnpm build`. Build output directory: `dist/public`.
+Cloudflare Pages project slug: `clinical-calc-mcp` (planned public URL: `https://clinical-calc-mcp.pages.dev`). The source repository is public, but the production Pages project is not yet connected or deployed because Cloudflare currently reports a Git integration error. See [Cloudflare deployment and troubleshooting](docs/cloudflare-deployment.md). Intended production branch: `main`. Build command: `pnpm build`. Build output directory: `dist/public`.
 
 ## Contribute
 
