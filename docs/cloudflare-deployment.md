@@ -34,7 +34,7 @@ pnpm check
 pnpm build
 ```
 
-The build writes the static website to `dist/public`. This project has no backend, database, runtime API credentials, or patient-data endpoint. If the Pages project settings ever change, keep the published configuration above in sync with Cloudflare.
+The build writes the static website to `dist/public` and pre-renders the homepage content into `index.html` for a complete first response before React hydrates it. This project has no backend, database, runtime API credentials, or patient-data endpoint. If the Pages project settings ever change, keep the published configuration above in sync with Cloudflare.
 
 ## GitHub integration troubleshooting
 
@@ -42,7 +42,7 @@ If a future build stops starting, check the Cloudflare project’s Git connectio
 
 ## Metadata and accuracy
 
-The site contains canonical, Open Graph/Twitter, JSON-LD SoftwareSourceCode/WebSite, `robots.txt`, and sitemap metadata. The canonical base address is set in `client/index.html`. Update it consistently if a custom domain is attached.
+The site contains canonical, Open Graph/Twitter, JSON-LD SoftwareSourceCode/WebSite/Person, `robots.txt`, and sitemap metadata. Google Search Console and Bing Webmaster Tools verification tags are in `client/index.html`. After deployment, the owner should complete the matching verification flows and submit `/sitemap.xml`; adding a token alone does not request indexing. See [search visibility and SEO maintenance](seo-maintenance.md) for the workflow and realistic expectations. The canonical base address is set in `client/index.html`. Update it consistently if a custom domain is attached.
 
 Keep package release claims accurate: PyPI currently has `0.1.0` with three tools, while the current GitHub source is the six-tool `0.2.0` code and is not yet published to PyPI. After a future release, update the install selector, quick-start guide, FAQ, package metadata, and structured descriptions together.
 

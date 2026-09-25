@@ -1,7 +1,7 @@
 {
   "name": "clinical-calc-mcp",
   "short_name": "clinical-calc",
-  "description": "Open-source local MCP server for deterministic clinical calculations and unit conversions.",
+  "description": "Open-source Python MCP server with six validated clinical calculation tools for local AI clients.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f6f6ef",

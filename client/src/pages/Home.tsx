@@ -16,13 +16,13 @@ import {
   MessageCircle,
   Package,
   Scale,
+  Search,
   ShieldCheck,
   Sparkles,
   Thermometer,
   Weight,
   X,
 } from "lucide-react";
-import "../brand.css";
 
 const REPO = "https://github.com/Umarjaum/clinical-calc-mcp";
 const SITE_REPO = "https://github.com/Umarjaum/clinical-calc-mcp-site";
@@ -101,6 +101,7 @@ const resources = [
   { icon: GitBranch, title: "Source & release history", detail: "Browse source, tests, tagged releases, and the current package changelog.", href: `${REPO}/releases`, tag: "GITHUB" },
   { icon: Package, title: "PyPI package", detail: "See the current published version and distribution files.", href: "https://pypi.org/project/clinical-calc-mcp/", tag: "PYTHON PACKAGE" },
   { icon: MessageCircle, title: "Community & contribution", detail: "Ask questions, suggest improvements, or help improve documentation.", href: `${REPO}/discussions`, tag: "JOIN IN" },
+  { icon: Search, title: "Search visibility & site verification", detail: "Verify ownership with Google and Bing, submit the sitemap, and measure discoverability.", href: `${SITE_REPO}/blob/main/docs/seo-maintenance.md`, tag: "SEO & SEARCH" },
 ];
 
 function BrandMark() {
@@ -383,7 +384,15 @@ export default function Home() {
         <div className="footer-main">
           <a className="brand footer-brand" href="#top"><BrandMark /><span className="brand-name">clinical<span>calc</span><i>·</i>mcp</span></a>
           <p>Small, deterministic tools for AI clients that run local MCP servers.</p>
-          <div className="footer-links"><a href={REPO} target="_blank" rel="noreferrer">Package repo <ArrowUpRight size={14} /></a><a href={SITE_REPO} target="_blank" rel="noreferrer">Website source <ArrowUpRight size={14} /></a><a href="https://pypi.org/project/clinical-calc-mcp/" target="_blank" rel="noreferrer">PyPI <ArrowUpRight size={14} /></a><a href={`${REPO}/discussions`} target="_blank" rel="noreferrer">Discussions <ArrowUpRight size={14} /></a><a href={`${REPO}/blob/main/docs/clinical-safety.md`} target="_blank" rel="noreferrer">Safety notes <ArrowUpRight size={14} /></a><a href={`${REPO}/blob/main/SECURITY.md`} target="_blank" rel="noreferrer">Security <ArrowUpRight size={14} /></a></div>
+          <div className="footer-links">
+            <a href={REPO} target="_blank" rel="noreferrer">Package repo <ArrowUpRight size={14} /></a>
+            <a href={SITE_REPO} target="_blank" rel="noreferrer">Website source <ArrowUpRight size={14} /></a>
+            <a href="https://pypi.org/project/clinical-calc-mcp/" target="_blank" rel="noreferrer">PyPI <ArrowUpRight size={14} /></a>
+            <a href={`${REPO}/discussions`} target="_blank" rel="noreferrer">Discussions <ArrowUpRight size={14} /></a>
+            <a href={`${REPO}/blob/main/docs/clinical-safety.md`} target="_blank" rel="noreferrer">Safety notes <ArrowUpRight size={14} /></a>
+            <a href={`${REPO}/blob/main/SECURITY.md`} target="_blank" rel="noreferrer">Security <ArrowUpRight size={14} /></a>
+            <a href="https://umarjaum.netlify.app/" target="_blank" rel="me noreferrer">Developer: Muhammad Umar Jabbar <ArrowUpRight size={14} /></a>
+          </div>
         </div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} clinical-calc-mcp contributors · MIT License</span><span>Local-first by design <span className="footer-spark">✳</span></span></div>
       </footer>
