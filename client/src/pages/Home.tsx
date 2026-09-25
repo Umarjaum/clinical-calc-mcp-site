@@ -111,7 +111,7 @@ function BrandMark() {
   );
 }
 
-function CopyButton({ text, label = "Copy command" }: { text: string; label?: string }) {
+function CopyButton({ text, label = "Copy command", buttonText = "Copy" }: { text: string; label?: string; buttonText?: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -136,7 +136,7 @@ function CopyButton({ text, label = "Copy command" }: { text: string; label?: st
   return (
     <button className="copy-button" onClick={copy} type="button" aria-label={label}>
       {copied ? <Check size={16} /> : <Clipboard size={16} />}
-      <span>{copied ? "Copied" : "Copy"}</span>
+      <span aria-live="polite">{copied ? "Copied" : buttonText}</span>
     </button>
   );
 }
@@ -225,7 +225,7 @@ export default function Home() {
 
         <section className="install-strip" aria-label="Quick start">
           <div className="install-copy"><span className="install-prompt">$</span><code>{githubInstallCommand}</code></div>
-          <CopyButton text={githubInstallCommand} />
+          <CopyButton text={githubInstallCommand} buttonText="Copy to clipboard" />
           <span className="install-note">six tools · GitHub main</span>
         </section>
 
@@ -302,7 +302,7 @@ export default function Home() {
             <p className="release-explainer">{installSource === "github"
               ? "The newest six-tool source is available on GitHub. Use uvx for a clean, isolated install without adding the package globally."
               : "PyPI currently publishes stable version 0.1.0 with the original three tools. The command below installs into your active Python environment. Use a virtual environment where possible."}</p>
-            <div className="release-command"><code>{selectedInstallCommand}</code><CopyButton text={selectedInstallCommand} label="Copy selected install command" /></div>
+            <div className="release-command"><code>{selectedInstallCommand}</code><CopyButton text={selectedInstallCommand} label="Copy selected install command" buttonText="Copy to clipboard" /></div>
             <p className="release-footnote">Both choices run a local stdio MCP server. The PyPI package will switch to six tools after 0.2.0 is released. <a href={`${SITE_REPO}/blob/main/docs/quickstart.md`} target="_blank" rel="noreferrer">Read the complete quick start and troubleshooting guide <ArrowUpRight size={13} /></a></p>
           </div>
 
