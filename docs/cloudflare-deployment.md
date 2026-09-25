@@ -1,36 +1,54 @@
-# Cloudflare Pages deployment and troubleshooting
+# Cloudflare Pages: deployment and maintenance
 
-The website source is published at <https://github.com/Umarjaum/clinical-calc-mcp-site>. The intended Pages project name is `clinical-calc-mcp`, which gives the default address `https://clinical-calc-mcp.pages.dev/` after the first successful deployment. **That Pages URL is not live yet.** Cloudflare's project-creation API currently returns error `8000011`, indicating its Pages GitHub integration needs to be installed or repaired. No site content was deployed.
+The website repository is connected to Cloudflare Pages. A push to `main` automatically triggers a production build and deploy; branches and pull requests can produce preview deployments according to the Cloudflare project settings.
 
-## Repair the GitHub connection
+## Production configuration
 
-1. Sign in to the Cloudflare account that should own the site and open **Workers & Pages**.
-2. In the Cloudflare dashboard, use the Pages flow **Create application → Pages → Connect to Git**.
-3. If the GitHub account is missing or an internal Git-installation error appears, open [GitHub Settings → Applications → Installed GitHub Apps](https://github.com/settings/installations) and find **Cloudflare Workers and Pages**. Configure its repository access to include `Umarjaum/clinical-calc-mcp-site`. Cloudflare advises uninstalling and reinstalling the app only if normal reauthorization does not resolve a broken installation; that can affect other repositories connected to the same Cloudflare account, so review the impact before choosing it.
-4. Once GitHub reports that Cloudflare has access to this repository, return to Cloudflare and create a **Pages** project connected to `Umarjaum/clinical-calc-mcp-site`.
-5. Use production branch `main`, build command `pnpm build`, and build output directory `dist/public`. No environment variables are required by the website.
-6. Wait for the first production deployment to finish. Verify the root page, `/robots.txt`, `/sitemap.xml`, `/favicon.svg`, `/site-hero.webp`, and a file under `/assets/`. Only after that succeeds should the default Pages address be shared as a live website.
+| Setting | Value |
+| --- | --- |
+| Cloudflare Pages project | `clinical-calc-mcp` |
+| Default address | `https://clinical-calc-mcp.pages.dev/` |
+| Git repository | `Umarjaum/clinical-calc-mcp-site` |
+| Production branch | `main` |
+| Build command | `pnpm build` |
+| Build output directory | `dist/public` |
+| Root directory | `/` |
+| Build secrets | None required |
 
-Cloudflare's official [GitHub integration troubleshooting guide](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/) documents the reinstall procedure and warns that removing the GitHub App also disables new builds for all projects attached to that installation. Prefer granting the intended repository access first, when possible.
+Cloudflare's GitHub integration performs the deployment. The accompanying GitHub Actions workflow (`.github/workflows/validate-site.yml`) independently installs dependencies, checks TypeScript, and verifies the production build; it does not require an API token and does not publish a second time.
 
-## Optional GitHub Actions deployment
+## Normal publishing flow
 
-The repository includes a workflow at `.github/workflows/deploy-cloudflare-pages.yml`. It always installs, type-checks, and builds the site. Deployment is deliberately disabled by default. If you prefer this deployment route instead of Cloudflare's Git integration, first create a **Cloudflare API token restricted to Pages edit access for the intended account/project**. Add it to GitHub Actions secrets as `CLOUDFLARE_API_TOKEN`, confirm `accountId` in the workflow, and set the repository Actions variable `CLOUDFLARE_PAGES_DEPLOY_ENABLED` to the exact value `true`. Review the workflow and token scope before enabling it. **Never commit or paste the token into a repository, issue, build log, or chat.**
+1. Make a focused change on a branch and open a pull request. GitHub Actions checks types and builds the site; Cloudflare can create a preview deployment if previews are enabled for that branch.
+2. Merge to `main` after checks pass.
+3. Cloudflare automatically builds and publishes the `main` revision. A successful GitHub Actions run alone is **not** proof the Cloudflare deploy succeeded; verify the Pages deployment result too.
+4. Smoke-test the home page, quick start, tool descriptions, safety text, documentation links, and static assets such as `/robots.txt`, `/sitemap.xml`, `/favicon.svg`, and `/site-hero.webp`.
 
-The GitHub workflow only deploys pushes to `main` (or a manual run) and skips pull requests. If using the Cloudflare Git integration, leave the deployment variable unset so two separate build systems do not publish the same project concurrently.
+## Local verification
 
-## Site metadata and safety
+Use Node.js 22 and pnpm:
 
-The site includes a canonical URL, Open Graph and Twitter metadata, a `SoftwareSourceCode` / `WebSite` JSON-LD graph, `robots.txt`, and a sitemap. Review the canonical and social-image URLs in `client/index.html` if the public hostname changes. The website describes an arithmetic-only utility and must not imply diagnosis, triage, treatment decisions, or universal AI-client compatibility.
+```bash
+pnpm install --frozen-lockfile
+pnpm check
+pnpm build
+```
 
-## Current state
+The build writes the static website to `dist/public`. This project has no backend, database, runtime API credentials, or patient-data endpoint. If the Pages project settings ever change, keep the published configuration above in sync with Cloudflare.
 
-- GitHub source: <https://github.com/Umarjaum/clinical-calc-mcp-site>
-- Cloudflare Pages slug intended: `clinical-calc-mcp`
-- Planned address: <https://clinical-calc-mcp.pages.dev/>
-- Production deployment: **blocked pending Cloudflare Git integration repair**
-- Local quality checks: `pnpm check` and `pnpm build`
-- Pages output directory: `dist/public`
-- Project cost: the direct static site has no server-side database or app backend
+## GitHub integration troubleshooting
 
-Cloudflare Pages supports direct file uploads too, but Git integration or the documented Wrangler workflow is easier to maintain because it records source, builds repeatably, and avoids manual one-off uploads.
+If a future build stops starting, check the Cloudflare project’s Git connection, repository access for the Cloudflare Workers & Pages app, production branch, and latest build logs. The GitHub-side validation workflow is independent; check both Cloudflare Pages and GitHub Actions. Avoid uninstalling/reinstalling the GitHub app unless simpler reauthorization fails, because an app installation can be shared with other repositories.
+
+## Metadata and accuracy
+
+The site contains canonical, Open Graph/Twitter, JSON-LD SoftwareSourceCode/WebSite, `robots.txt`, and sitemap metadata. The canonical base address is set in `client/index.html`. Update it consistently if a custom domain is attached.
+
+Keep package release claims accurate: PyPI currently has `0.1.0` with three tools, while the current GitHub source is the six-tool `0.2.0` code and is not yet published to PyPI. After a future release, update the install selector, quick-start guide, FAQ, package metadata, and structured descriptions together.
+
+## Links
+
+- [Website source repository](https://github.com/Umarjaum/clinical-calc-mcp-site)
+- [Python package repository](https://github.com/Umarjaum/clinical-calc-mcp)
+- [Cloudflare Pages documentation](https://developers.cloudflare.com/pages/)
+- [Cloudflare Git integration troubleshooting](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/)

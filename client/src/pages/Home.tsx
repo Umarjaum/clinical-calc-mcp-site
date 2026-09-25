@@ -3,13 +3,18 @@ import {
   Activity,
   ArrowRight,
   ArrowUpRight,
+  BookOpen,
   Check,
   ChevronDown,
   Clipboard,
   Code2,
   ExternalLink,
+  FileText,
+  GitBranch,
   HeartPulse,
   Menu,
+  MessageCircle,
+  Package,
   Scale,
   ShieldCheck,
   Sparkles,
@@ -20,9 +25,11 @@ import {
 import "../brand.css";
 
 const REPO = "https://github.com/Umarjaum/clinical-calc-mcp";
+const SITE_REPO = "https://github.com/Umarjaum/clinical-calc-mcp-site";
 const HERO_IMAGE = "/site-hero.webp";
-const installCommand =
+const githubInstallCommand =
   "uvx --from git+https://github.com/Umarjaum/clinical-calc-mcp.git clinical-calc-mcp";
+const pypiInstallCommand = "python -m pip install clinical-calc-mcp";
 
 const tools = [
   {
@@ -87,6 +94,15 @@ const clients = [
   { name: "VS Code", kind: "Workspace MCP", className: "vscode" },
 ];
 
+const resources = [
+  { icon: BookOpen, title: "Quick start & client setup", detail: "Choose an install track, connect Claude Desktop, Cursor, VS Code, and troubleshoot.", href: `${SITE_REPO}/blob/main/docs/quickstart.md`, tag: "SETUP GUIDE" },
+  { icon: FileText, title: "All six tool specifications", detail: "Inputs, units, outputs, formula notes, ranges, and validation details.", href: `${REPO}#available-tools`, tag: "REFERENCE" },
+  { icon: ShieldCheck, title: "Clinical safety notes", detail: "Intended use, limitations, calculation sources, and independent verification.", href: `${REPO}/blob/main/docs/clinical-safety.md`, tag: "SAFETY" },
+  { icon: GitBranch, title: "Source & release history", detail: "Browse source, tests, tagged releases, and the current package changelog.", href: `${REPO}/releases`, tag: "GITHUB" },
+  { icon: Package, title: "PyPI package", detail: "See the current published version and distribution files.", href: "https://pypi.org/project/clinical-calc-mcp/", tag: "PYTHON PACKAGE" },
+  { icon: MessageCircle, title: "Community & contribution", detail: "Ask questions, suggest improvements, or help improve documentation.", href: `${REPO}/discussions`, tag: "JOIN IN" },
+];
+
 function BrandMark() {
   return (
     <span className="brand-mark" aria-hidden="true">
@@ -131,7 +147,15 @@ function SectionLabel({ children }: { children: string }) {
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [installSource, setInstallSource] = useState<"github" | "pypi">("github");
   const closeMenu = () => setMenuOpen(false);
+  const serverArgs = installSource === "github"
+    ? ["--from", "git+https://github.com/Umarjaum/clinical-calc-mcp.git", "clinical-calc-mcp"]
+    : ["--from", "clinical-calc-mcp", "clinical-calc-mcp"];
+  const clientConfig = JSON.stringify({
+    mcpServers: { "clinical-calc-mcp": { command: "uvx", args: serverArgs } },
+  }, null, 2);
+  const selectedInstallCommand = installSource === "github" ? githubInstallCommand : pypiInstallCommand;
 
   return (
     <div className="site-shell">
@@ -158,6 +182,7 @@ export default function Home() {
           <nav id="primary-navigation" className={menuOpen ? "primary-nav is-open" : "primary-nav"} aria-label="Main navigation">
             <a href="#tools" onClick={closeMenu}>Tools</a>
             <a href="#connect" onClick={closeMenu}>Connect</a>
+            <a href="#documentation" onClick={closeMenu}>Docs</a>
             <a href="#safety" onClick={closeMenu}>Safety</a>
             <a href="#contribute" onClick={closeMenu}>Contribute</a>
             <a className="nav-github" href={REPO} target="_blank" rel="noreferrer">
@@ -199,9 +224,9 @@ export default function Home() {
         </section>
 
         <section className="install-strip" aria-label="Quick start">
-          <div className="install-copy"><span className="install-prompt">$</span><code>{installCommand}</code></div>
-          <CopyButton text={installCommand} />
-          <span className="install-note">six tools from GitHub main</span>
+          <div className="install-copy"><span className="install-prompt">$</span><code>{githubInstallCommand}</code></div>
+          <CopyButton text={githubInstallCommand} />
+          <span className="install-note">six tools · GitHub main</span>
         </section>
 
         <section className="tools-section section-pad" id="tools">
@@ -266,10 +291,38 @@ export default function Home() {
             ))}
           </div>
 
+          <div className="release-panel" id="install">
+            <div className="release-panel-heading">
+              <div><SectionLabel>CHOOSE YOUR TRACK</SectionLabel><h3>Published package <span>or</span> latest source?</h3></div>
+              <div className="source-switch" role="group" aria-label="Choose package source">
+                <button type="button" aria-pressed={installSource === "github"} onClick={() => setInstallSource("github")}>GitHub main <span>6 tools</span></button>
+                <button type="button" aria-pressed={installSource === "pypi"} onClick={() => setInstallSource("pypi")}>PyPI 0.1.0 <span>3 tools</span></button>
+              </div>
+            </div>
+            <p className="release-explainer">{installSource === "github"
+              ? "The newest six-tool source is available on GitHub. Use uvx for a clean, isolated install without adding the package globally."
+              : "PyPI currently publishes stable version 0.1.0 with the original three tools. The command below installs into your active Python environment. Use a virtual environment where possible."}</p>
+            <div className="release-command"><code>{selectedInstallCommand}</code><CopyButton text={selectedInstallCommand} label="Copy selected install command" /></div>
+            <p className="release-footnote">Both choices run a local stdio MCP server. The PyPI package will switch to six tools after 0.2.0 is released. <a href={`${SITE_REPO}/blob/main/docs/quickstart.md`} target="_blank" rel="noreferrer">Read the complete quick start and troubleshooting guide <ArrowUpRight size={13} /></a></p>
+          </div>
+
           <div className="connect-code">
-            <div className="code-meta"><span><i /> LOCAL CONFIG</span><span>uvx · no global install</span></div>
-            <pre><code><span className="code-key">"mcpServers"</span>: {'{'}<br />  <span className="code-key">"clinical-calc-mcp"</span>: {'{'}<br />    <span className="code-key">"command"</span>: <span className="code-string">"uvx"</span>,<br />    <span className="code-key">"args"</span>: [<span className="code-string">"--from"</span>, <span className="code-string">"git+https://github.com/Umarjaum/clinical-calc-mcp.git"</span>, <span className="code-string">"clinical-calc-mcp"</span>]<br />  {'}'}<br />{'}'}</code></pre>
-            <div className="code-footer"><span>Install uv first · requires internet for initial install</span><CopyButton text={`{"mcpServers":{"clinical-calc-mcp":{"command":"uvx","args":["--from","git+https://github.com/Umarjaum/clinical-calc-mcp.git","clinical-calc-mcp"]}}`} label="Copy MCP configuration" /></div>
+            <div className="code-meta"><span><i /> {installSource === "github" ? "LATEST SOURCE CONFIG" : "PYPI RELEASE CONFIG"}</span><span>uvx · isolated environment</span></div>
+            <pre><code>{clientConfig}</code></pre>
+            <div className="code-footer"><span>Install uv first · requires internet for initial install</span><CopyButton text={clientConfig} label="Copy selected MCP configuration" /></div>
+          </div>
+          <div className="resource-library" id="documentation">
+            <div className="resource-heading"><SectionLabel>THE PROJECT, OPENLY DOCUMENTED</SectionLabel><h3>Find your next step.</h3><p>Source, setup, safety, packaging, releases, and community links—all in one place.</p></div>
+            <div className="resource-grid">
+              {resources.map((item) => {
+                const Icon = item.icon;
+                return <a className="resource-card" href={item.href} target="_blank" rel="noreferrer" key={item.title}>
+                  <div className="resource-card-top"><span>{item.tag}</span><Icon size={19} /></div>
+                  <h4>{item.title}</h4><p>{item.detail}</p><span className="resource-link">Open resource <ArrowUpRight size={14} /></span>
+                </a>;
+              })}
+            </div>
+            <a className="website-source-link" href={SITE_REPO} target="_blank" rel="noreferrer">This website is open source too · view its repository <ArrowUpRight size={15} /></a>
           </div>
           <p className="compatibility-note"><span>Heads up</span> This is a local stdio server, not a hosted HTTP endpoint. Remote-only AI platforms need a separately hosted, secured service to connect. We do not claim universal AI compatibility.</p>
         </section>
@@ -316,7 +369,7 @@ export default function Home() {
           <div className="faq-list">
             <details><summary>Can I use it with any AI platform?<ChevronDown size={18} /></summary><p>Only AI clients that support MCP and launching a local stdio process can use this version directly. A browser-only or remote-only platform would need a separately hosted and secured MCP endpoint.</p></details>
             <details><summary>Does it give medical advice?<ChevronDown size={18} /></summary><p>No. It performs only the documented calculations from supplied numbers. It does not diagnose, triage, recommend treatment or dosing, or evaluate clinical suitability. Follow local protocols and independently verify results.</p></details>
-            <details><summary>Which version is on PyPI?<ChevronDown size={18} /></summary><p>PyPI currently publishes 0.1.0 with three tools. The six-tool source is on GitHub main; the site will clearly reflect the published package version until the 0.2.0 release is live.</p></details>
+            <details><summary>Which version is on PyPI?<ChevronDown size={18} /></summary><p>PyPI currently publishes 0.1.0 with three tools. The six-tool 0.2.0 source is available on GitHub main, but is not yet published to PyPI. This page’s install selector shows which track you are choosing.</p></details>
             <details><summary>How do I contribute safely?<ChevronDown size={18} /></summary><p>Read the contribution guide and use the GitHub issue forms. Use made-up test values only—never include patient identifiers, real clinical narratives, credentials, or other confidential data.</p></details>
           </div>
         </section>
@@ -330,7 +383,7 @@ export default function Home() {
         <div className="footer-main">
           <a className="brand footer-brand" href="#top"><BrandMark /><span className="brand-name">clinical<span>calc</span><i>·</i>mcp</span></a>
           <p>Small, deterministic tools for AI clients that run local MCP servers.</p>
-          <div className="footer-links"><a href={REPO} target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14} /></a><a href="https://pypi.org/project/clinical-calc-mcp/" target="_blank" rel="noreferrer">PyPI <ArrowUpRight size={14} /></a><a href={`${REPO}/blob/main/docs/clinical-safety.md`} target="_blank" rel="noreferrer">Safety notes <ArrowUpRight size={14} /></a><a href={`${REPO}/blob/main/SECURITY.md`} target="_blank" rel="noreferrer">Security <ArrowUpRight size={14} /></a></div>
+          <div className="footer-links"><a href={REPO} target="_blank" rel="noreferrer">Package repo <ArrowUpRight size={14} /></a><a href={SITE_REPO} target="_blank" rel="noreferrer">Website source <ArrowUpRight size={14} /></a><a href="https://pypi.org/project/clinical-calc-mcp/" target="_blank" rel="noreferrer">PyPI <ArrowUpRight size={14} /></a><a href={`${REPO}/discussions`} target="_blank" rel="noreferrer">Discussions <ArrowUpRight size={14} /></a><a href={`${REPO}/blob/main/docs/clinical-safety.md`} target="_blank" rel="noreferrer">Safety notes <ArrowUpRight size={14} /></a><a href={`${REPO}/blob/main/SECURITY.md`} target="_blank" rel="noreferrer">Security <ArrowUpRight size={14} /></a></div>
         </div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} clinical-calc-mcp contributors · MIT License</span><span>Local-first by design <span className="footer-spark">✳</span></span></div>
       </footer>
