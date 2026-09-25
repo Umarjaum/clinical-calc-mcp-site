@@ -2,6 +2,8 @@
 
 The public project website for [clinical-calc-mcp](https://github.com/Umarjaum/clinical-calc-mcp): an open-source local MCP server for deterministic clinical calculations and unit conversions.
 
+**Visit the site:** [clinical-calc-mcp.pages.dev](https://clinical-calc-mcp.pages.dev/) · **Everyone is welcome to contribute** from [across the web](https://github.com/Umarjaum/clinical-calc-mcp-site/blob/main/CONTRIBUTING.md).
+
 ## Develop locally
 
 ```bash
