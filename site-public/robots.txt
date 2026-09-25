@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://clinical-calc-mcp.pages.dev/sitemap.xml

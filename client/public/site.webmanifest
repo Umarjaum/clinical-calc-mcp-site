@@ -1,0 +1,10 @@
+{
+  "name": "clinical-calc-mcp",
+  "short_name": "clinical-calc",
+  "description": "Open-source local MCP server for deterministic clinical calculations and unit conversions.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f6ef",
+  "theme_color": "#f6f6ef",
+  "lang": "en"
+}
